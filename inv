@@ -1,16 +1,25 @@
-vm1 ansible_ssh_host=192.168.34.21 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+[vagrant]
+vagrant_vm1 ansible_ssh_host=192.168.34.21
 
-[web]
-vm1
-web[01:03].example.com
+[vagrant:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+is_development=True
 
-[db]
-vm1
-db_[a:b].example.com
+# for apache
+apache_document_root=/vagrant/src/public
+apache_server_name=ansible.dev
 
-[development]
-vm1
+# for laravel and apache
+deploy_laravel_root=/vagrant/src
+deploy_laravel_env=local
+deploy_laravel_debug=True
+deploy_laravel_app_key=seITT4CLYjZvTiwlR2aobMKqgvYn9snP
 
-[production]
-web[01:03].example.com
-db_[a:b].example.com
+#for laravel and postgresql
+db_connection=pgsql
+db_host="null"
+db_database=app
+db_test_database=app_test
+db_username=vagrant
+db_password=pass
