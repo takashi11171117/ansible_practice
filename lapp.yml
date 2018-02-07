@@ -95,6 +95,20 @@
       tags:
         - php
 
+    - name: カスタムphp.iniを転送
+      copy: src=files/php/zzmyphp.ini dest=/etc/php.d/zzmyphp.ini
+      notify:
+        - Apacheを再起動
+      tags:
+        - php
+
+    - name: composer.pharインストール
+      shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+      args:
+        creates: /usr/bin/composer
+      tags:
+        - php
+
   handlers:
     - name: Apacheを再起動
       service: name=httpd state=restarted
