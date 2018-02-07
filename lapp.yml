@@ -19,3 +19,41 @@
 
     - name: ntpdを起動、自動起動の有効化
       service: name=ntpd state=started enabled=yes
+
+    - name: Apacheをインストール
+      yum: name=httpd state=present
+      tags:
+        - apache
+
+    - name: httpd.confテンプレートを転送
+      template:
+        src=files/apache/httpd.conf.j2
+        dest=/etc/httpd/conf/httpd.conf
+        owner=root
+        group=root
+        mode=0644
+      tags:
+        - apache
+      notify:
+        - Apacheを再起動
+
+    - name: vhosts.confテンプレートを転送
+      template:
+        src=files/apache/vhosts.conf.j2
+        dest=/etc/httpd/conf.d/vhosts.conf
+        owner=root
+        group=root
+        mode=0644
+      tags:
+        - apache
+      notify:
+        - Apacheを再起動
+
+    - name: Apacheを起動、自動起動を有効化
+      service: name=httpd state=started enabled=yes
+      tags:
+        - apache
+
+  handlers:
+    - name: Apacheを再起動
+      service: name=httpd state=restarted
