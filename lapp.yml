@@ -54,6 +54,47 @@
       tags:
         - apache
 
+    - name: EPELリポジトリをインストール
+      yum: name=epel-release state=present
+      tags:
+        - php
+
+    - name: Remiリポジトリがインストール済か
+      stat: path=/etc/yum.repos.d/remi-php70.repo
+      register: remi_release_status
+      tags:
+        - php
+
+    - debug: var=remi_release_status
+
+    - name: Remiリポジトリをインストール
+      yum: name="http://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+      when: remi_release_status.stat.exists == false
+      tags:
+        - php
+
+    - name: PHP7.0をインストール
+      yum: name={{ item }} state=present enablerepo=remi-php70
+      with_items:
+        - php
+        - php-cli
+        - php-process
+        - php-pdo
+        - php-pgsql
+        - php-mbstring
+        - php-mcrypt
+        - php-devel
+        - php-common
+        - php-pear
+        - php-opcache
+        - php-json
+        - php-pecl-memcached
+        - php-pecl-zip
+      notify:
+        - Apacheを再起動
+      tags:
+        - php
+
   handlers:
     - name: Apacheを再起動
       service: name=httpd state=restarted

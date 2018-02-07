@@ -344,8 +344,13 @@ AddDefaultCharset UTF-8
 # broken on your system.
 # Defaults if commented: EnableMMAP On, EnableSendfile Off
 #
-#EnableMMAP off
+{% if is_development %}
+EnableMMAP off
+EnableSendfile off
+{% else %}
+EnableMMAP on
 EnableSendfile on
+{% endif %}
 
 # Supplemental configuration
 #
